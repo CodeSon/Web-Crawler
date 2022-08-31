@@ -13,9 +13,22 @@ class HemnetSpider(scrapy.Spider):
         for advert in response.css("ul.normal-results > li.normal-results__hit > a::attr('href')"):
             yield scrapy.Request(url=advert.get(), callback=self.parseInnerPage)
 
+            # checking the next page button if i've reached the end of the inner pages
+            nextPage = response.css("a.next_page::attr('href')").get()
+
+            if nextPage is not None:
+                response.follow(nextPage, self.parse)
+
+
             # Sending the extracted links to another parse method
             #Request a new page
     def parseInnerPage(self, response):
-        print(response.text)
-        
+       streetName = response.css("h1.property-address_street::text").get()
+       price = response.css("p.property-info__price::text").get()
+       
+       # Removing the currency symbol in the price
+       price = price.replace("kr","")
+       price = price.replace(u"\xa0","")
+       print(price)
+      
         
