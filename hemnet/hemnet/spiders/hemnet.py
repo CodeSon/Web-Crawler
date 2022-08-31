@@ -29,6 +29,41 @@ class HemnetSpider(scrapy.Spider):
        # Removing the currency symbol in the price
        price = price.replace("kr","")
        price = price.replace(u"\xa0","")
-       print(price)
+       
+
+       attributeData = {}
+
+       for property_attributes in response.css("div.property-attributes > div.property-attributes-table > dl.property-attributes-table__area > div.property-attributes-table__row"):
+        property_attribute_label = property_attributes.css("dt.property-attributes-table__label::text").get()
+
+        # Cleaning the data
+        if property_attribute_label is not None:
+            property_attribute_label = property_attribute_label.replace(u"\n","")
+            property_attribute_label = property_attribute_label.replace(u"\t","")
+            property_attribute_label = property_attribute_label.strip()
+        
+        property_attribute_value = property_attributes.css("dd.property-attributes-table__value::text").get()
+        if property_attribute_value is not None:
+            property_attribute_value = property_attribute_value.replace(u"\n", "")
+            property_attribute_value = property_attribute_value.replace(u"\t", "")
+            property_attribute_value = property_attribute_value.replace(u"\xa0", "")
+            property_attribute_value = property_attribute_value.replace("kr/m²", "")
+            property_attribute_value = property_attribute_value.replace("m²", "")
+            property_attribute_value = property_attribute_value.replace("kr/år", "")
+            property_attribute_value = property_attribute_value.replace("kr/mån", "")
+            property_attribute_value = property_attribute_value.strip()
+        
+
+        if property_attribute_label is not None:
+            attributeData[property_attribute_label] = property_attribute_value
+        print(attributeData)
+     
+
+
+     
+
+    
+      
+
       
         
