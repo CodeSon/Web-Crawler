@@ -15,7 +15,7 @@ Using:
 
 # Getting advertisement, links, detail pages as well as the pagination
 
-![](images/adverts.png)
+![Image Link](https://github.com/CodeSon/Web-Crawler/blob/main/images/adverts.jpg
 
 
 
