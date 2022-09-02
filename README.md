@@ -15,7 +15,7 @@ Using:
 
 # Getting advertisement, links, detail pages as well as the pagination
 
-- ![](images/adverts.png)
+![](images/adverts.png)
 
 
 
