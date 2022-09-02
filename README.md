@@ -11,7 +11,13 @@ Using:
 # Getting the Street names and prices
 - Accessing the street names
 - Trimming the prices by removing the currency symbol
-image.png
+- image.png
+
+# Getting advertisement, links, detail pages as well as the pagination
+
+- ![](imagesadverts.png)
+
+
 
 
 

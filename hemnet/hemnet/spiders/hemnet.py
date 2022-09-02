@@ -1,22 +1,35 @@
+from scrapy import signals 
 from pkg_resources import yield_lines
 from requests import Response
+from pydispatch import dispatcher
 import scrapy
+import json
+import time
 
 
 class HemnetSpider(scrapy.Spider):
     name = "hemnet"
     start_urls = [ 'https://www.hemnet.se/bostader?item_types%5B%5D=radhus&item_types%5B%5D=bostadsratt']
 
+    counter = 0
+    results = {}
+
+# When the spider is done crawling, the spider closed method is executed
+    def __init__(self):
+        dispatcher.connect(self.spider_closed, signals.spider_closed)
+
     def parse(self, response):
         
         #Loop through listings to get ad data
         for advert in response.css("ul.normal-results > li.normal-results__hit > a::attr('href')"):
+            #time.sleep(2)
             yield scrapy.Request(url=advert.get(), callback=self.parseInnerPage)
 
             # checking the next page button if i've reached the end of the inner pages
             nextPage = response.css("a.next_page::attr('href')").get()
 
             if nextPage is not None:
+                #time.sleep(1)
                 response.follow(nextPage, self.parse)
 
 
@@ -56,14 +69,16 @@ class HemnetSpider(scrapy.Spider):
 
         if property_attribute_label is not None:
             attributeData[property_attribute_label] = property_attribute_value
-        print(attributeData)
-     
+            
+            self.results[self.counter]={
+                "streetName": streetName,
+                "price": price,
+                "streetName": streetName,
+                "attributeData": attributeData,
+            }
 
+            self.counter = self.counter + 1
 
-     
-
-    
-      
-
-      
-        
+    def spider_closed(self, spider):
+        with open('results.json', 'w') as fp:
+            json.dump(self.results, fp)
