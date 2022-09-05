@@ -36,7 +36,7 @@ class HemnetSpider(scrapy.Spider):
             # Sending the extracted links to another parse method
             #Request a new page
     def parseInnerPage(self, response):
-       streetName = response.css("h1.property-address_street::text").get()
+       streetName = response.css("div.property-info_primary-container > div.property-info_address-container > div.property-address > h1.property-address_street::text").get()
        price = response.css("p.property-info__price::text").get()
        
        # Removing the currency symbol in the price
@@ -70,11 +70,10 @@ class HemnetSpider(scrapy.Spider):
         if property_attribute_label is not None:
             attributeData[property_attribute_label] = property_attribute_value
             
-            self.results[self.counter]={
+            self.results[self.counter] = {
                 "streetName": streetName,
                 "price": price,
-                "streetName": streetName,
-                "attributeData": attributeData,
+                "attributeData": attributeData
             }
 
             self.counter = self.counter + 1
